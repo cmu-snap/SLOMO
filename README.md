@@ -8,7 +8,7 @@ We use two machines for our experiments, one for hosting NFs and another for tra
 **Setup 1** 
 
 * _CPU_: Intel Xeon E5-2620 v4
-* _NIC _: Intel XL710 - 40GbE QSFP+ 1584 (2 NICs/server)
+* _NIC_: Intel XL710 - 40GbE QSFP+ 1584 (2 NICs/server)
 
 * _OS_: Ubuntu 18.04.3 LTS - 4.15.0-99-generic
 * _DPDK_:  18.05.1 stable
@@ -34,8 +34,12 @@ We use two machines for our experiments, one for hosting NFs and another for tra
 
 ## **Installation - Setup**
 
-* <>  contains basic installation routines.
+* setup/  contains sample setup commands for partitioning the NIC with SRIOV.
+* experiment_scripts/ contains sample scripts that initiate NF experiments 
+* data_processing/ contains sample routines for parsing experiment data
+* traffic_generator/ contains a sample traffic generation script
+ 
 * The NFs we used in our work rely on DPDK for I/O.  
-* <> is a script that partitions each physical NIC to multiple virtual ports using SR-IOV. Please ensure that your NIC’s VF drivers are updated and that a compatible version of DPDK is being used.
+* Please ensure that your NIC’s VF drivers are updated and that a compatible version of DPDK is being used.
 * Please ensure that NFs will be spawned on cores of the same CPU socket as the NIC they will be receiving traffic from to avoid unnecessary communication over QPI. 
 
