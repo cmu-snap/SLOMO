@@ -3,9 +3,9 @@
 rate=40000
 packet_size=80
 
-for tNF_packet_size in 64  500 1500
+for tNF_packet_size in 64 500 1500
 do
-    for nf_type in mon_dpdk vpn mon_dpdk Suricata Snort 
+    for nf_type in mon_dpdk vpn mon_dpdk Suricata Snort maglev 
     do
         mkdir experiment_data_${nf_type}
         for nr_competitors in 1 2 3 4 5 6 7  
@@ -58,7 +58,7 @@ do
                     sleep 40
 
                     ssh -tt node1 'bash -s' < ./util_scripts/stop_mg.sh
-                    if [ "${nf_type}" != "Suricata" ] && [ "${nf_type}" != "Snort" ]
+                    if [ "${nf_type}" != "Suricata" ] && [ "${nf_type}" != "Snort" ] && [ "${nf_type}" != "maglev" ]
                     then
                         ssh -tt node0 'bash -s' < ./util_scripts/stop_nf.sh "click" 
                         sleep 5
@@ -79,6 +79,13 @@ do
                         scp node0:output_app1.txt ./experiment_data_${nf_type}/perf_data_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.txt
                         scp node0:counters_before_${nr_competitors}.csv  ./experiment_data_${nf_type}/counters_before_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.csv
                         scp node0:counters_after_${nr_competitors}.csv  ./experiment_data_${nf_type}/counters_after_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.csv
+                    elif [ "${nf_type}" == "maglev" ]
+                    then
+                        ssh -tt node0 'bash -s' < ./util_scripts/stop_nf.sh "NetBricks" 
+                        sleep 5
+                        scp node1:perf_data_${nr_competitors}.txt ./experiment_data_${nf_type}/perf_data_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.txt
+                        scp node0:counters_before_${nr_competitors}.csv  ./experiment_data_${nf_type}/counters_before_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.csv
+                        scp node0:counters_after_${nr_competitors}.csv   ./experiment_data_${nf_type}/counters_after_${tNF_packet_size}_${nr_competitors}_${size}_${reads}_${iters}.csv
                     fi
                done
            done
